@@ -5,57 +5,54 @@ using namespace std;
 #define BLACK 3
 int adj[100][100];
 int color[100];
-int parent [100];
-int dis[100];
+int st[100];
+int ft[100];
+int t=1;
 int node,edge;
 
-void bfs(int snode)
+void Visit(int x)
+{
+    color[x]=GRAY;
+    st[x]=t;
+    t++;
+    for(int i=0;i<node;i++)
+    {
+        if(adj[x][i]==1)
+        {
+            if(color[i]==WHITE)
+            {
+                Visit(i);
+            }
+        }
+    }
+    color[x]=BLACK;
+    ft[x]=t;
+    t++;
+}
+
+void DFS()
 {
     for(int i=0;i<node;i++)
     {
         color[i]=WHITE;
-        dis[i]=INT_MIN;
-        parent[i]=-1;
     }
-    dis[snode]=0;
-    parent[snode]=-1;
-    queue<int>q;
-    q.push(snode);
-    while(!q.empty())
+    for(int i=0;i<node;i++)
     {
-        int x;
-        x=q.front();
-        q.pop();
-        color[x]=GRAY;
-        printf("%d ",x);
-        for(int i=0;i<node;i++)
-        {
-            if(adj[x][i]==1)
-            {
-                if(color[i]==WHITE)
-                {
-                    q.push(i);
-                    parent[i]=x;
-                    dis[i]=dis[x]+1;
-                }
-            }
-
-        }
-        color[x]=BLACK;
+        if(color[i]==WHITE)
+            Visit(i);
     }
-
 }
 
 int main()
 {
-    freopen("bfs.txt","r",stdin);
+    freopen("input.txt","r",stdin);
     cin>>node>>edge;
     int n1,n2;
     for(int i=0;i<edge;i++)
     {
         cin>>n1>>n2;
         adj[n1][n2]=1;
-        adj[n2][n1]=1;
+        //adj[n2][n1]=1;
     }
 
     for(int i=0;i<node;i++)
@@ -78,7 +75,10 @@ int main()
         cout<<endl;
     }
     cout<<endl;
-    bfs(0);
-
+    DFS();
+    for(int i=0;i<node;i++)
+    {
+        cout<<"Node "<<(char)('A'+i)<<": "<<st[i]<<" "<<ft[i]<<endl;
+    }
 }
 
